@@ -4,10 +4,10 @@ const app = express();
 app.use(express.json());
 
 const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'TU_USUARIO',
-  password: 'TU_CONTRASEÑA',
-  database: 'TU_BASE'
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME
 });
 
 connection.connect();
@@ -17,15 +17,6 @@ app.get('/api/usuarios', (req, res) => {
   connection.query('SELECT * FROM usuarios', (error, results) => {
     if (error) return res.status(500).json({ error });
     res.json(results);
-  });
-});
-
-// Endpoint para agregar usuario
-app.post('/api/usuarios', (req, res) => {
-  const { nombre } = req.body;
-  connection.query('INSERT INTO usuarios (nombre) VALUES (?)', [nombre], (error, results) => {
-    if (error) return res.status(500).json({ error });
-    res.json({ id: results.insertId, nombre });
   });
 });
 
