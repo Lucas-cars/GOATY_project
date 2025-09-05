@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mysql = require('mysql');
 const app = express();
@@ -13,7 +14,7 @@ const connection = mysql.createConnection({
 connection.connect();
 
 // Endpoint para obtener usuarios
-app.get('/api/usuarios', (req, res) => {
+app.get('/api/usuario', (req, res) => {
   connection.query('SELECT * FROM usuarios', (error, results) => {
     if (error) return res.status(500).json({ error });
     res.json(results);
