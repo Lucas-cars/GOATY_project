@@ -13,12 +13,9 @@ const connection = mysql.createConnection({
 
 connection.connect();
 
-app.get('/', (req, res) => {
-  res.send('API GOATY funcionando');
-});
 
 // Endpoint para obtener usuarios
-app.get('/api/usuario', (req, res) => {
+app.get('/', (req, res) => {
   connection.query('SELECT * FROM usuario', (error, results) => {
     if (error) return res.status(500).json({ error });
     res.json(results);
