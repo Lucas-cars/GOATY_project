@@ -15,7 +15,7 @@ connection.connect();
 
 // Endpoint para obtener usuarios
 app.get('/api/usuario', (req, res) => {
-  connection.query('SELECT * FROM usuarios', (error, results) => {
+  connection.query('SELECT * FROM usuario', (error, results) => {
     if (error) return res.status(500).json({ error });
     res.json(results);
   });
