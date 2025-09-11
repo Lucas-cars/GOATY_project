@@ -1,9 +1,61 @@
 h1 {
-    color: blue;
-    text-align: center;
-}
+      text-align: center;
+      margin-top: 50px;
+    }
 
-p {
-    font-size: 18px;
-    line-height: 1.5;
-}
+h2 {
+      text-align: center;
+      margin-top: 50px;
+    }
+
+body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #2c2c2c; /* Fondo gris */
+      color: white;
+    }
+
+    /* Botón del menú */
+    .menu-btn {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      font-size: 28px;
+      background: transparent;
+      border: none;
+      color: white;
+      cursor: pointer;
+      z-index: 1001;
+    }
+
+    /* Contenedor del menú */
+    .side-menu {
+      position: fixed;
+      top: 0;
+      left: -250px;
+      width: 250px;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      transition: 0.3s;
+      padding-top: 60px;
+      z-index: 1000;
+    }
+
+    .side-menu a {
+      display: block;
+      padding: 15px 25px;
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      transition: background 0.3s;
+    }
+
+    .side-menu a:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Estado abierto */
+    .side-menu.open {
+      left: 0;
+    }
