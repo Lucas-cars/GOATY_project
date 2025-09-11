@@ -1,37 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Session</title>
+    <title>Menú Desplegable</title>
     <link rel="stylesheet" href="../src/style.css">
 </head>
 <body>
-    <h1>Bienvenido a la pagina principal</h1>
-    <h2>Este seria el lugar donde te registrarias o iniciarias session</h2>
-    <!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Menú Desplegable</title>
-</head>
-<body>
-    
+    <div class="header-container">
+        <h1>Bienvenido a la pagina principal</h1>
+        <h2>Este seria el lugar donde te registrarias o iniciarias session</h2>
+    </div>
+
     <!-- Botón para abrir/cerrar -->
-  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    <button class="menu-btn" onclick="toggleMenu()">
+        <img src="../images/logodespegable.jpg" alt="Menú" class="menu-logo">
+    </button>
 
-  <!-- Menú lateral -->
-  <div class="side-menu" id="menu">
-    <a href="#">📦 Stock</a>
-    <a href="#">📊 Informes</a>
-    <a href="#">👤 Empleados</a>
-  </div>
+    <!-- Menú lateral -->
+    <div class="side-menu" id="menu">
+        <a href="#">
+            <img src="../images/stock.jpg" alt="Stock" class="menu-icon">
+            Stock
+        </a>
+        <a href="#">
+            <img src="../images/informes.jpg" alt="Informes" class="menu-icon">
+            Informes
+        </a>
+        <a href="#">
+            <img src="../images/empleados.jpg" alt="Empleados" class="menu-icon">
+            Empleados
+        </a>
+    </div>
 
-  <script>
+<script>
     function toggleMenu() {
-      document.getElementById("menu").classList.toggle("open");
+        const menu = document.getElementById("menu");
+        const btn = document.querySelector(".menu-btn");
+        menu.classList.toggle("open");
+        btn.classList.toggle("hide");
     }
-  </script>
+
+    // Cerrar menú al hacer clic fuera
+    document.addEventListener('click', function(event) {
+        const menu = document.getElementById("menu");
+        const btn = document.querySelector(".menu-btn");
+        if (
+            menu.classList.contains("open") &&
+            !menu.contains(event.target) &&
+            !btn.contains(event.target)
+        ) {
+            menu.classList.remove("open");
+            btn.classList.remove("hide");
+        }
+    });
+</script>
+
 </body>
 </html>
