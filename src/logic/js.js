@@ -25,7 +25,7 @@ app.get('/api/usuarios', (req, res) => {
   });
 });
 
-
+// Endpoint para obtener empleados
 app.get('/api/empleados', (req, res) => {
   connection.query('SELECT * FROM empleado', (error, results) => {
     if (error) return res.status(500).json({ error });
@@ -54,11 +54,11 @@ fetch('http://localhost:3000/api/empleados', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    dni: '12345678',
-    mail: 'juan@example.com',
-    telefono: '123456789',
-    cargo: 'admin',
-    nombre: 'Juan'
+    dni: '764',
+    mail: 'lataro@jaja.com',
+    telefono: '341548584',
+    cargo: 'empleado',
+    nombre: 'lautaro'
   })
 })
   .then(response => response.json())
