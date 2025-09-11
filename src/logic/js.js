@@ -50,18 +50,18 @@ app.listen(3000, () => console.log('API corriendo en http://localhost:3000'));
 
 
 
-async function postData(url = '', data = {}) {
-  const response = await fetch(url, {
+fetch('http://localhost:3000/api/empleados', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ dni: '12345678', mail: 'juan@example.com', telefono: '123456789', cargo: 'admin' ,nombre: 'Juan'})
-});
-
-  return response.json(); // parses JSON response into native JavaScript objects
-  
-}
-
-postData('http://localhost:3000/api/empleados', { answer: 1 })
+  body: JSON.stringify({
+    dni: '12345678',
+    mail: 'juan@example.com',
+    telefono: '123456789',
+    cargo: 'admin',
+    nombre: 'Juan'
+  })
+})
+  .then(response => response.json())
   .then(data => {
-    console.log(data); // JSON data parsed by data.json() call
+    console.log('Empleado agregado:', data);
   });
