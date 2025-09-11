@@ -24,3 +24,19 @@ app.get('/api/usuarios', (req, res) => {
 
 app.listen(3000, () => console.log('API corriendo en http://localhost:3000'));
 
+async function postData(url = '', data = {}) {
+  // Opciones por defecto estan marcadas con un *
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+  return response.json(); // parses JSON response into native JavaScript objects
+}
+
+postData('http://localhost:3000/api/usuarios', { answer: 1 })
+  .then(data => {
+    console.log(data); // JSON data parsed by data.json() call
+  });
