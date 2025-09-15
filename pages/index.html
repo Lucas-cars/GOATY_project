@@ -56,5 +56,39 @@
     });
 </script>
 
+<script>
+const menu = document.getElementById("menu");
+const btn = document.querySelector(".menu-btn");
+
+let menuTimeout;
+
+btn.addEventListener("mouseenter", () => {
+    clearTimeout(menuTimeout);
+    menu.classList.add("open");
+    btn.classList.add("hide");
+});
+
+menu.addEventListener("mouseenter", () => {
+    clearTimeout(menuTimeout);
+});
+
+menu.addEventListener("mouseleave", () => {
+    menuTimeout = setTimeout(() => {
+        menu.classList.remove("open");
+        btn.classList.remove("hide");
+    }, 100);
+});
+
+// Mostrar el botón cuando el mouse sale del área del logo
+btn.addEventListener("mouseleave", () => {
+    menuTimeout = setTimeout(() => {
+        if (!menu.matches(':hover')) {
+            menu.classList.remove("open");
+            btn.classList.remove("hide");
+        }
+    }, 100);
+});
+</script>
+
 </body>
 </html>
