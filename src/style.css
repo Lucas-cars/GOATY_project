@@ -64,10 +64,21 @@ header .logo span {
       left: 0;
     }
 
-    .hero {
-      padding: 4rem 2rem;
-      text-align: center;
-    }
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 40vh;
+  background: linear-gradient(135deg, #161616 0%, #232323 100%);
+  border-radius: 18px;
+  box-shadow: 0 4px 24px 0 rgba(10,10,10,0.45);
+  padding: 3rem 2rem;
+  margin: 2rem auto;
+  max-width: 600px;
+  color: #fff;
+  text-align: center;
+}
 
     .hero h1 {
       font-size: 3rem;
@@ -87,4 +98,39 @@ header .logo span {
       line-height: 1.6;
     }
 
-    
+    .features-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 40vh; /* Ajusta según tu preferencia */
+}
+
+.features {
+  background: linear-gradient(135deg, #161616 0%, #232323 100%);
+  border-radius: 18px;
+  box-shadow: 0 4px 24px 0 rgba(10,10,10,0.45);
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 500px;
+  color: #fff;
+  text-align: center;
+}
+.back-header {
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+  text-align: left;
+}
+
+.back-header a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.back-header a:hover {
+  text-decoration: underline;
+}
