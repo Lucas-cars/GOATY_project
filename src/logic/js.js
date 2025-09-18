@@ -17,8 +17,6 @@ const connection = mysql.createConnection({
 connection.connect();
 
 
-
-// Endpoint para obtener usuarios
 app.get('/api/usuarios', (req, res) => {
   connection.query('SELECT * FROM usuario', (error, results) => {
     if (error) return res.status(500).json({ error });
@@ -26,7 +24,7 @@ app.get('/api/usuarios', (req, res) => {
   });
 });
 
-// Endpoint para obtener empleados
+
 app.get('/api/empleados', (req, res) => {
   connection.query('SELECT * FROM empleado', (error, results) => {
     if (error) return res.status(500).json({ error });
@@ -34,7 +32,6 @@ app.get('/api/empleados', (req, res) => {
   });
 });
 
-// Endpoint POST para agregar empleado
 app.post('/api/empleados', (req, res) => {
   const { dni, mail, telefono, cargo, nombre } = req.body;
   connection.query(
@@ -55,11 +52,11 @@ fetch('http://localhost:3000/api/empleados', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    dni: '764',
-    mail: 'lataro@jaja.com',
-    telefono: '341548584',
-    cargo: 'empleado',
-    nombre: 'lautaro'
+    dni: '',
+    mail: '',
+    telefono: '',
+    cargo: '',
+    nombre: ''
   })
 })
   .then(response => response.json())
