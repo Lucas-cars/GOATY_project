@@ -18,17 +18,17 @@ connection.connect();
 
 
 app.get('/api/usuarios', (req, res) => {
-  connection.query('SELECT * FROM usuario', (error, results) => {
+  connection.query('SELECT * FROM usuario', (error, resultado) => {
     if (error) return res.status(500).json({ error });
-    res.json(results);
+    res.json(resultado);
   });
 });
 
 
 app.get('/api/empleados', (req, res) => {
-  connection.query('SELECT * FROM empleado', (error, results) => {
+  connection.query('SELECT * FROM empleado', (error, resultado) => {
     if (error) return res.status(500).json({ error });
-    res.json(results);
+    res.json(resultado);
   });
 });
 
@@ -37,14 +37,14 @@ app.post('/api/empleados', (req, res) => {
   connection.query(
     'INSERT INTO empleado (dni, mail, telefono, cargo, nombre) VALUES (?, ?, ?, ?, ?)',
     [dni, mail, telefono, cargo, nombre],
-    (error, results) => {
+    (error, resultado) => {
       if (error) return res.status(500).json({ error });
-      res.json({ id: results.insertId, dni, mail, telefono, cargo, nombre });
+      res.json({ id: resultado.insertId, dni, mail, telefono, cargo, nombre });
     }
   );
 });
 
-app.listen(3000, () => console.log('API corriendo en http://localhost:3000'));
+app.listen(3000);
 
 
 
