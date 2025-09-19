@@ -62,4 +62,4 @@ fetch('http://localhost:3000/api/empleados', {
   .then(response => response.json())
   .then(data => {
     console.log('Empleado agregado:', data);
-  });
+  }); 
