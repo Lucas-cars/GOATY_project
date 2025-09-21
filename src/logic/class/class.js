@@ -90,8 +90,5 @@ class asistencia {
     }
 }
 
-const Pedro = new user(132, 45646546, "Pedro", "Juan", 'pedroj@gmail.com', '6455646465', 'admin');
 
-// Pedro.modDatos('nombre','Pedras');
-// console.log(Pedro.asignarCargo('empleado'));
-// console.log(Pedro.verDatos());
+

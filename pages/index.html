@@ -1,62 +1,60 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Bienvenida</title>
-  
-  <!-- Fuentes y estilos -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="../src/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú Desplegable</title>
+    <link rel="stylesheet" href="../src/style.css">
 </head>
 <body>
-  <!-- HEADER -->
-  <header>
-    <div class="logo">
-      <img src="../images/Cabra en el espacio estelar.jpg" alt="Logo Cabra" width="50">
-      <span>GOATY</span>
+    <div class="header-container">
+        <!-- <h1>Bienvenido a la pagina principal</h1>
+        <h2>Este seria el lugar donde te registrarias o inicias sesion</h2> -->
     </div>
-    <nav>
-        <a class="menu-link" href="stock.html">Stock</a>
-        <a class="menu-link" href="empleados.html">Empleados</a>
-        <a class="menu-link" href="informes.html">Informes</a>
-    </nav>
-  </header>
 
-  <!-- MAIN -->
-  <main>
-    <!-- SECCIÓN HERO -->
-    <section class="hero">
-      <h1>GOATY - Sistema de Gestión para Madereras</h1>
-      <h2>Organizá tu negocio de forma rápida, moderna y centralizada.</h2>
-      <p>
-        Este sistema fue diseñado para negocios del rubro de la madera que necesitan
-        controlar el stock, la información del personal y generar informes detallados.
-      </p>
-      <p>
-        Con una interfaz clara y actual, GOATY te permite mantener el control de tu empresa en todo momento.
-      </p>
-    </section>
+    <!-- Botón para abrir/cerrar -->
+    <button class="menu-btn" onclick="toggleMenu()">
+        <img src="../images/logodespegable.jpg" alt="Menú" class="menu-logo">
+    </button>
 
-    <main>
-    
-    <div class="features-container">
-        <section class="features">
-        <div class="feature">
-            <strong>📦 Gestión de Stock:</strong> Agregá y controlá distintos tipos de madera, medidas, precios y cantidades.
-        </div>
-        <div class="feature">
-            <strong>👥 Administración de Empleados:</strong> Registrá datos clave del personal, como DNI, cargo y fecha de ingreso.
-        </div>
-        <div class="feature">
-            <strong>📊 Informes Dinámicos:</strong> Generá reportes por fecha, tipo o sección para tomar mejores decisiones.
-        </div>
-        </section>
+    <!-- Menú lateral -->
+    <div class="side-menu" id="menu">
+        <a href="#">
+            <img src="../images/stock.jpg" alt="Stock" class="menu-icon">
+            Stock
+        </a>
+        <a href="#">
+            <img src="../images/informes.jpg" alt="Informes" class="menu-icon">
+            Informes
+        </a>
+        <a href="#">
+            <img src="../images/empleados.jpg" alt="Empleados" class="menu-icon">
+            Empleados
+        </a>
     </div>
-    
-    </main>
 
-  
+<script>
+    function toggleMenu() {
+        const menu = document.getElementById("menu");
+        const btn = document.querySelector(".menu-btn");
+        menu.classList.toggle("open");
+        btn.classList.toggle("hide");
+    }
+
+    // Cerrar menú al hacer clic fuera
+    document.addEventListener('click', function(event) {
+        const menu = document.getElementById("menu");
+        const btn = document.querySelector(".menu-btn");
+        if (
+            menu.classList.contains("open") &&
+            !menu.contains(event.target) &&
+            !btn.contains(event.target)
+        ) {
+            menu.classList.remove("open");
+            btn.classList.remove("hide");
+        }
+    });
+</script>
+
 </body>
 </html>
