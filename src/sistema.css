@@ -1,0 +1,228 @@
+/* dashboard.css */
+
+/* Reset básico */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Orbitron', sans-serif;
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  background-color: #111; /* fondo negro */
+  color: #fff; /* letras blancas */
+}
+
+.dashboard-container {
+  display: flex;
+  width: 100%;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background-color: #1a1a1a; /* gris oscuro */
+  color: #ccc;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* Logo GOATY con imagen */
+.sidebar .logo {
+  font-size: 24px;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #fff;
+}
+
+.sidebar .logo img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Menú lateral */
+.sidebar nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar nav ul li {
+  padding: 15px 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #333;
+  transition: background 0.3s, color 0.3s;
+  color: #ccc;
+}
+
+.sidebar nav ul li:hover {
+  background-color: #333;
+  color: #fff;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 40px;
+  background-color: #181818;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.7);
+}
+
+h1 {
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+/* Formulario */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  color: #ccc;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  background-color: #222;
+  border: 1px solid #444;
+  border-radius: 6px;
+  color: #fff;
+  transition: all 0.3s;
+}
+
+.form-group input::placeholder {
+  color: #888;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #fff;
+  outline: none;
+}
+
+.form-group select {
+  color: #fff;
+}
+
+/* Campos deshabilitados */
+input:disabled,
+select:disabled {
+  background-color: #333;
+  color: #666;
+  cursor: not-allowed;
+}
+
+/* Botón */
+.btn {
+  padding: 10px 20px;
+  background-color: #444;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.btn:hover {
+  background-color: #666;
+  color: #fff;
+}
+
+/* Secciones */
+.seccion {
+  display: none;
+}
+
+.seccion.activa {
+  display: block;
+}
+
+/* Tabla Empleados e Informes */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  color: #fff;
+}
+
+thead {
+  background-color: #222;
+}
+
+thead th {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #444;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #1f1f1f;
+}
+
+tbody tr:hover {
+  background-color: #333;
+}
+
+tbody td {
+  padding: 10px;
+  border-bottom: 1px solid #444;
+}
+
+/* Contenedor selector + buscador en línea */
+.selector-buscador {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+#selectorEmpleado {
+  width: 180px;
+  padding: 8px;
+  background-color: #222;
+  border: 1px solid #444;
+  border-radius: 6px;
+  color: #fff;
+}
+
+#buscadorEmpleado {
+  flex: 1;
+  padding: 8px;
+  background-color: #222;
+  border: 1px solid #444;
+  border-radius: 6px;
+  color: #fff;
+}
+
+/* Gráfico redimensionable */
+.resizable-container {
+  width: 400px;
+  height: 200px;
+  resize: both;
+  overflow: hidden;
+  border: 1px solid #444;
+  background-color: #222;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.resizable-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
