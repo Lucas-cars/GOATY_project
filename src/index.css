@@ -54,16 +54,6 @@ header .logo span {
       position: relative;
     }
 
-    nav a:hover::after {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 2px;
-      background: #888;
-      bottom: -5px;
-      left: 0;
-    }
-
 .hero {
   display: flex;
   flex-direction: column;
@@ -133,4 +123,18 @@ header .logo span {
 
 .back-header a:hover {
   text-decoration: underline;
+}
+
+nav a.menu-link {
+  font-family: 'Orbitron', sans-serif; /* Misma fuente que GOATY */
+  font-size: 1.1rem; /* Tamaño de letra inicial */
+  color: #ccc; /* Color inicial */
+  text-decoration: none; /* Sin subrayado */
+  transition: font-size 0.3s ease, color 0.3s ease, text-shadow 0.3s ease;
+}
+
+nav a.menu-link:hover {
+  color: #fff; /* Cambia el color del texto al pasar el mouse */
+  font-size: 1.5rem; /* Agranda el tamaño de la fuente */
+  text-shadow: 0 0 6px #fff, 0 2px 4px #aaa; /* Efecto de iluminación */
 }
