@@ -17,49 +17,60 @@ const connection = mysql.createConnection({
 connection.connect();
 
 
-app.get('/api/usuarios', (req, res) => {
-  connection.query('SELECT * FROM usuario', (error, resultado) => {
-    if (error) return res.status(500).json({ error });
-    res.json(resultado);
-  });
-});
 
 
-app.get('/api/empleados', (req, res) => {
-  connection.query('SELECT * FROM empleado', (error, resultado) => {
-    if (error) return res.status(500).json({ error });
-    res.json(resultado);
-  });
-});
+// postear, deletear, buscar endpoints (empleados)
+function crearENDPOINT(tabla, columnas) {
 
-app.post('/api/empleados', (req, res) => {
-  const { dni, mail, telefono, cargo, nombre } = req.body;
-  connection.query(
-    'INSERT INTO empleado (dni, mail, telefono, cargo, nombre) VALUES (?, ?, ?, ?, ?)',
-    [dni, mail, telefono, cargo, nombre],
-    (error, resultado) => {
+  app.get(`/api/${tabla}`, (req, res) => {
+    connection.query(`SELECT * FROM ${tabla}`, (error, resultado) => {
       if (error) return res.status(500).json({ error });
-      res.json({ id: resultado.insertId, dni, mail, telefono, cargo, nombre });
-    }
-  );
-});
+      res.json(resultado);
+    });
+  });
+
+  app.post(`/api/${tabla}`, (req, res) => {
+    const valores = columnas.map(col => req.body[col]);
+    const placeholders = columnas.map(() => '?').join(', ');
+    connection.query(
+      `INSERT INTO ${tabla} (${columnas.join(', ')}) VALUES (${placeholders})`,
+      valores,
+      (error, resultado) => {
+        if (error) return res.status(500).json({ error });
+        res.json({ id: resultado.insertId, ...req.body });
+      }
+    );
+  });
+
+  app.delete(`/api/${tabla}`, (req, res) => {
+    const { dni } = req.body;
+    connection.query(
+      `DELETE FROM ${tabla} WHERE dni = ?`,
+      [dni],
+      (error, resultado) => {
+        if (error) return res.status(500).json({ error });
+        res.json(resultado);
+      }
+    );
+  });
+}
+// postear, deletear, buscar endpoints (empleados)
+
+crearENDPOINT('asistencia', ['id_asistencia', 'fecha', 'hr_en', 'hr_sl', 'dni'])
+crearENDPOINT('empleado', ['dni', 'mail', 'telefono', 'cargo', 'nombre'])
+crearENDPOINT('movimiento_stock' ['id_movimiento', 'fecha', 'tipo', 'cantidad', 'id_producto', 'id_usuario'])
+crearENDPOINT('producto', ['id_producto', 'nombre', 'codigo', 'categoria', 'stock_act', 'stock_min', 'precio', 'descripcion'])
+crearENDPOINT('usuario', ['id_usuario', 'nombre_usuario', 'rol', 'contraseña'])
 
 app.listen(3000);
 
 
 
 fetch('http://localhost:3000/api/empleados', {
-  method: 'POST',
+  method: 'GET',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    dni: '',
-    mail: '',
-    telefono: '',
-    cargo: '',
-    nombre: ''
-  })
 })
   .then(response => response.json())
   .then(data => {
-    console.log('Empleado agregado:', data);
+    console.log('Empleados encontrados:', data);
   }); 
