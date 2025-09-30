@@ -1,64 +1,38 @@
+// USUARIO
 class user {
-    #idUsuario = ''
-    #dni = '';
-    #nombre = '';
-    #apellido = '';
-    #email = '';
-    #telefono = '';
-    #cargo = '';
+    #usuario = ''
+    #contraseña = '';
 
-    constructor(idUsuario, dni, nombre, apellido, email, telefono, cargo) {
-        this.#idUsuario = idUsuario;
-        this.#dni = dni;
-        this.#nombre = nombre;
-        this.#apellido = apellido;
-        this.#email = email;
-        this.#telefono = telefono;
-        this.#cargo = cargo;
+    constructor(usuario, contraseña) {
+        this.#usuario = usuario;
+        this.#contraseña = contraseña;
     }
-    modDatos(type,dato) {
-        if (this.#cargo == 'admin' || this.#cargo == 'hr') {
-            switch (type) {
-                case 'nombre':
-                    this.#nombre = dato;
-                    break;
-                case 'apellido':
-                    this.#apellido = dato;
-                    break;
-                case 'email':
-                    this.#email = dato;
-                    break;
-                case 'telefono':
-                    this.#telefono = dato;
-                    break;
-                case 'cargo':
-                    this.#cargo = dato;
-                    break;
-                }
-        } else {
-            throw new Error('No tienes permisos para modificar datos');
-            }
+    static modDatos(type,dato) {
         }
-        asignarCargo(dato){
-            if (this.#cargo = 'admin'){
-            // ACA IRIA EL USER SELECCIONADO QUE AUN NO LO HICE ESA CLASE
-            return 'Cambio realizado con exito'
-            } else {
-                throw new Error('No tienes permiso para asignar cargos')
-            }
-        }
-        verDatos() {
+
+        static verDatos() {
             return {
-                dni: this.#dni,
-                nombre: this.#nombre,
-                apellido: this.#apellido,
-                email: this.#email,
-                telefono: this.#telefono,
-                cargo: this.#cargo,
+
+            };
+        }
+        
+        static idUser(){
+            
+        }
+        static User() {
+            return {
+                
             };
         }
 }
 
+class admin extends user {
+    asignarCargo(userSeleccionado, cargo) {
+
+    }
+}
+
+// ASISTECIA    
 class asistencia {
     #idAsistencia = '';
     #fecha = '';
@@ -75,7 +49,7 @@ class asistencia {
         this.#horaEntrada = hora;
         return 'Entrada registrada con exito';
     }
-    registrarSaldida(hora) {
+    registrarSalida(hora) {
         this.#horaSalida = hora;
         return 'Salida registrada con exito';
     }
@@ -86,9 +60,61 @@ class asistencia {
             salida: this.#horaSalida,
             entrada: this.#horaEntrada,
         }
-
     }
 }
 
+// STOCK
+class Stock {
+    #idProducto = '';
+    #nombre = '';
+    #codigo = '';
+    #stockActual = '';
+    #stockMinimo = '';
+    #precio = '';
+    #descripcion = '';
+    #categoria = '';
+    constructor(idProducto, nombre, codigo, stockActual, stockMinimo, precio, descripcion, categoria) {
+        this.#idProducto = idProducto;
+        this.#nombre = nombre;
+        this.#codigo = codigo;
+        this.#stockActual = stockActual;
+        this.#stockMinimo = stockMinimo;
+        this.#precio = precio;
+        this.#descripcion = descripcion;
+        this.#categoria = categoria;
+    }
+    actualizarStock(cantidad) {
+        this.#stockActual += cantidad;
+        return 'Stock actualizado con exito';
+    }
+    verStock() {
+        return {
+            stockActual: this.#stockActual,
+        };
+    }
+    verDatos() {
+        return {
+            idProducto: this.#idProducto,
+            nombre: this.#nombre,
+            codigo: this.#codigo,
+            stockActual: this.#stockActual,
+            precio: this.#precio,
+            descripcion: this.#descripcion,
+            categoria: this.#categoria,
+        };
+    }
+    esNecesarioReponer() {
+        if (this.#stockActual < this.#stockMinimo) {
+            return true;
+        }
+        return false;
+    }
+    eliminarProducto() {
+        // ACA IRIA LA LOGICA PARA ELIMINAR EL PRODUCTO DE LA BASE DE DATOS
+        return 'Producto eliminado con exito';
+    }
 
+}
 
+// EXPORTO LAS CLASES PARA PODER USARLAS EN OTRO LADO
+module.exports = { user, admin, asistencia, Stock };
