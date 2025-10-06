@@ -19,7 +19,7 @@ connection.connect();
 
 
 
-// postear, deletear, buscar endpoints (empleados)
+
 function crearENDPOINT(tabla, columnas, primaryKey = 'id') {
 
   app.get(`/api/${tabla}`, (req, res) => {
@@ -75,7 +75,7 @@ function crearENDPOINT(tabla, columnas, primaryKey = 'id') {
       );
   });
 }
-// postear, deletear, buscar, actualizar (empleados)
+
 
 crearENDPOINT('asistencia', ['id_asistencia', 'fecha', 'hr_en', 'hr_sl', 'dni'], 'id_asistencia')
 crearENDPOINT('empleado', ['dni', 'mail', 'telefono', 'cargo', 'nombre'], 'dni')
