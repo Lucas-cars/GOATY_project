@@ -20,7 +20,7 @@ connection.connect();
 
 
 // postear, deletear, buscar endpoints (empleados)
-function crearENDPOINT(tabla, columnas) {
+function crearENDPOINT(tabla, columnas, primaryKey = 'id') {
 
   app.get(`/api/${tabla}`, (req, res) => {
     connection.query(`SELECT * FROM ${tabla}`, (error, resultado) => {
@@ -43,34 +43,48 @@ function crearENDPOINT(tabla, columnas) {
   });
 
   app.delete(`/api/${tabla}`, (req, res) => {
-    const { dni } = req.body;
+    const { [primaryKey]: pkValue } = req.body;
     connection.query(
-      `DELETE FROM ${tabla} WHERE dni = ?`,
-      [dni],
+      `DELETE FROM ${tabla} WHERE ${primaryKey} = ?`,
+      [pkValue],
       (error, resultado) => {
         if (error) return res.status(500).json({ error });
         res.json(resultado);
       }
     );
   });
-}
-// postear, deletear, buscar endpoints (empleados)
 
-crearENDPOINT('asistencia', ['id_asistencia', 'fecha', 'hr_en', 'hr_sl', 'dni'])
-crearENDPOINT('empleado', ['dni', 'mail', 'telefono', 'cargo', 'nombre'])
-crearENDPOINT('movimiento_stock' ['id_movimiento', 'fecha', 'tipo', 'cantidad', 'id_producto', 'id_usuario'])
-crearENDPOINT('producto', ['id_producto', 'nombre', 'codigo', 'categoria', 'stock_act', 'stock_min', 'precio', 'descripcion'])
-crearENDPOINT('usuario', ['id_usuario', 'nombre_usuario', 'rol', 'contraseña'])
+  app.patch(`/api/${tabla}`, (req, res) => {
+      const {[primaryKey]: pkValue, ...campos } = req.body;
+
+      const keys = Object.keys(campos);
+      if (keys.length === 0) { 
+        return res.status(400).json({ error: 'No se enviaron los campos para actualizar' });
+      }
+
+      const setClause = keys.map(k => `${k} = ?`).join(', ');
+      const valores = keys.map(k => campos[k]);
+
+      connection.query(
+        `UPDATE ${tabla} SET ${setClause} WHERE ${primaryKey} = ?`,
+        [...valores, pkValue],
+        (error, resultado) => {
+          if(error) return res.status(500).json({ error });
+          res.json({ actualizado: true, ...req.body });
+        }
+      );
+  });
+}
+// postear, deletear, buscar, actualizar (empleados)
+
+crearENDPOINT('asistencia', ['id_asistencia', 'fecha', 'hr_en', 'hr_sl', 'dni'], 'id_asistencia')
+crearENDPOINT('empleado', ['dni', 'mail', 'telefono', 'cargo', 'nombre'], 'dni')
+crearENDPOINT('movimiento_stock' ['id_movimiento', 'fecha', 'tipo', 'cantidad', 'id_producto', 'id_usuario'], 'id_movimiento')
+crearENDPOINT('producto', ['id_producto', 'nombre', 'codigo', 'categoria', 'stock_act', 'stock_min', 'precio', 'descripcion'], 'id_producto')
+crearENDPOINT('usuario', ['id_usuario', 'nombre_usuario', 'rol', 'contraseña'], 'id_usuario')
 
 app.listen(3000);
 
 
 
-fetch('http://localhost:3000/api/empleados', {
-  method: 'GET',
-  headers: { 'Content-Type': 'application/json' },
-})
-  .then(response => response.json())
-  .then(data => {
-    console.log('Empleados encontrados:', data);
-  }); 
+
