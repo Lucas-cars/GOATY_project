@@ -17,49 +17,74 @@ const connection = mysql.createConnection({
 connection.connect();
 
 
-app.get('/api/usuarios', (req, res) => {
-  connection.query('SELECT * FROM usuario', (error, resultado) => {
-    if (error) return res.status(500).json({ error });
-    res.json(resultado);
-  });
-});
 
 
-app.get('/api/empleados', (req, res) => {
-  connection.query('SELECT * FROM empleado', (error, resultado) => {
-    if (error) return res.status(500).json({ error });
-    res.json(resultado);
-  });
-});
 
-app.post('/api/empleados', (req, res) => {
-  const { dni, mail, telefono, cargo, nombre } = req.body;
-  connection.query(
-    'INSERT INTO empleado (dni, mail, telefono, cargo, nombre) VALUES (?, ?, ?, ?, ?)',
-    [dni, mail, telefono, cargo, nombre],
-    (error, resultado) => {
+function crearENDPOINT(tabla, columnas, primaryKey = 'id') {
+
+  app.get(`/api/${tabla}`, (req, res) => {
+    connection.query(`SELECT * FROM ${tabla}`, (error, resultado) => {
       if (error) return res.status(500).json({ error });
-      res.json({ id: resultado.insertId, dni, mail, telefono, cargo, nombre });
-    }
-  );
-});
+      res.json(resultado);
+    });
+  });
+
+  app.post(`/api/${tabla}`, (req, res) => {
+    const valores = columnas.map(col => req.body[col]);
+    const placeholders = columnas.map(() => '?').join(', ');
+    connection.query(
+      `INSERT INTO ${tabla} (${columnas.join(', ')}) VALUES (${placeholders})`,
+      valores,
+      (error, resultado) => {
+        if (error) return res.status(500).json({ error });
+        res.json({ id: resultado.insertId, ...req.body });
+      }
+    );
+  });
+
+  app.delete(`/api/${tabla}`, (req, res) => {
+    const { [primaryKey]: pkValue } = req.body;
+    connection.query(
+      `DELETE FROM ${tabla} WHERE ${primaryKey} = ?`,
+      [pkValue],
+      (error, resultado) => {
+        if (error) return res.status(500).json({ error });
+        res.json(resultado);
+      }
+    );
+  });
+
+  app.patch(`/api/${tabla}`, (req, res) => {
+      const {[primaryKey]: pkValue, ...campos } = req.body;
+
+      const keys = Object.keys(campos);
+      if (keys.length === 0) { 
+        return res.status(400).json({ error: 'No se enviaron los campos para actualizar' });
+      }
+
+      const setClause = keys.map(k => `${k} = ?`).join(', ');
+      const valores = keys.map(k => campos[k]);
+
+      connection.query(
+        `UPDATE ${tabla} SET ${setClause} WHERE ${primaryKey} = ?`,
+        [...valores, pkValue],
+        (error, resultado) => {
+          if(error) return res.status(500).json({ error });
+          res.json({ actualizado: true, ...req.body });
+        }
+      );
+  });
+}
+
+
+crearENDPOINT('asistencia', ['id_asistencia', 'fecha', 'hr_en', 'hr_sl', 'dni'], 'id_asistencia')
+crearENDPOINT('empleado', ['dni', 'mail', 'telefono', 'cargo', 'nombre'], 'dni')
+crearENDPOINT('movimiento_stock' ['id_movimiento', 'fecha', 'tipo', 'cantidad', 'id_producto', 'id_usuario'], 'id_movimiento')
+crearENDPOINT('producto', ['id_producto', 'nombre', 'codigo', 'categoria', 'stock_act', 'stock_min', 'precio', 'descripcion'], 'id_producto')
+crearENDPOINT('usuario', ['id_usuario', 'nombre_usuario', 'rol', 'contraseña'], 'id_usuario')
 
 app.listen(3000);
 
 
 
-fetch('http://localhost:3000/api/empleados', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    dni: '',
-    mail: '',
-    telefono: '',
-    cargo: '',
-    nombre: ''
-  })
-})
-  .then(response => response.json())
-  .then(data => {
-    console.log('Empleado agregado:', data);
-  });
+
