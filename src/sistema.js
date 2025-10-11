@@ -1,0 +1,137 @@
+    /* ------------------ GENERAL ------------------ */
+    function mostrarSeccion(seccionId) {
+  // Ocultar todas las secciones
+  const secciones = document.querySelectorAll('.seccion');
+  secciones.forEach(seccion => {
+    seccion.classList.remove('activa');
+  });
+
+  // Mostrar la sección seleccionada
+  const seccionActiva = document.getElementById(seccionId);
+  if (seccionActiva) {
+    seccionActiva.classList.add('activa');
+  }
+}
+
+    function toggleCamposEmpleado() {
+      const asistencia = document.getElementById('empleadoAsistencia').value;
+      ['empleadoHoraIngreso','empleadoHoraSalida'].forEach(id => {
+        const campo = document.getElementById(id);
+        if(asistencia==='Presente'){campo.disabled=false;}
+        else{campo.disabled=true; campo.value='';}
+      });
+    }
+
+    /* ------------------ EMPLEADOS ------------------ */
+    let empleados = [];
+
+    function agregarEmpleado() {
+      const nombre = document.getElementById('empleadoNombre').value.trim();
+      const dni = document.getElementById('empleadoDNI').value.trim();
+      const cargo = document.getElementById('empleadoCargo').value.trim();
+      const fechaRegistro = document.getElementById('empleadoFechaRegistro').value;
+      const horaIngreso = document.getElementById('empleadoHoraIngreso').value;
+      const horaSalida = document.getElementById('empleadoHoraSalida').value;
+      const asistencia = document.getElementById('empleadoAsistencia').value;
+
+      if(asistencia==='Presente' && (!nombre||!dni||!cargo||!fechaRegistro||!horaIngreso||!horaSalida)){
+        alert('Por favor, completá todos los campos para empleados presentes.');
+        return;
+      }
+
+      empleados.push({nombre,dni,cargo,fechaRegistro,horaIngreso,horaSalida,asistencia});
+      actualizarTablaEmpleados();
+      document.getElementById('empleadoNombre').value='';
+      document.getElementById('empleadoDNI').value='';
+      document.getElementById('empleadoCargo').value='';
+      document.getElementById('empleadoFechaRegistro').value='';
+      document.getElementById('empleadoAsistencia').value='Presente';
+      toggleCamposEmpleado();
+      actualizarSelectorEmpleados();
+    }
+
+    function actualizarTablaEmpleados() {
+      const tbody = document.querySelector('#tablaEmpleados tbody');
+      tbody.innerHTML='';
+      empleados.forEach(emp=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML=`<td>${emp.nombre}</td><td>${emp.dni}</td><td>${emp.cargo}</td><td>${emp.fechaRegistro}</td><td>${emp.horaIngreso}</td><td>${emp.horaSalida}</td><td>${emp.asistencia}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    /* ------------------ INFORMES ------------------ */
+    function actualizarSelectorEmpleados() {
+      const selector=document.getElementById('selectorEmpleado');
+      selector.innerHTML='<option value="">Todos los empleados</option>';
+      empleados.forEach((emp,idx)=>{
+        const opt=document.createElement('option');
+        opt.value=idx;
+        opt.textContent=emp.nombre;
+        selector.appendChild(opt);
+      });
+      document.getElementById('buscadorEmpleado').value='';
+    }
+
+    function filtrarEmpleados(){
+      const texto = document.getElementById('buscadorEmpleado').value.toLowerCase();
+      const selector=document.getElementById('selectorEmpleado');
+      selector.innerHTML='<option value="">Todos los empleados</option>';
+      empleados.forEach((emp,idx)=>{
+        if(emp.nombre.toLowerCase().includes(texto)){
+          const opt=document.createElement('option');
+          opt.value=idx;
+          opt.textContent=emp.nombre;
+          selector.appendChild(opt);
+        }
+      });
+    }
+
+    function generarInforme(){
+      const desde=document.getElementById('desde').value;
+      const hasta=document.getElementById('hasta').value;
+      const selectorEmpleado=document.getElementById('selectorEmpleado').value;
+
+      if(!desde||!hasta){alert('Seleccioná fecha desde y hasta.'); return;}
+      if(new Date(desde)>new Date(hasta)){alert('Fecha "Desde" mayor que "Hasta".'); return;}
+
+      let empleadosFiltrados=empleados.filter(emp=>emp.fechaRegistro>=desde && emp.fechaRegistro<=hasta);
+      if(selectorEmpleado!==''){empleadosFiltrados=[empleados[parseInt(selectorEmpleado)]];}
+
+      const tbody=document.querySelector('#tablaInforme tbody');
+      tbody.innerHTML='';
+      empleadosFiltrados.forEach(emp=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML=`<td>${emp.nombre}</td><td>${emp.dni}</td><td>${emp.cargo}</td><td>${emp.fechaRegistro}</td><td>${emp.horaIngreso}</td><td>${emp.horaSalida}</td><td>${emp.asistencia}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    /* ------------------ STOCK ------------------ */
+    const ctxStock=document.getElementById('graficoStock').getContext('2d');
+    let stockMaderas=[];
+
+    const datosStock={labels:[],datasets:[{label:'Cantidad en Stock',data:[],backgroundColor:[],borderColor:'#bbb',borderWidth:1}]} ;
+    const configStock={type:'bar',data:datosStock,options:{responsive:true,scales:{y:{beginAtZero:true,ticks:{color:'#ddd'}},x:{ticks:{color:'#ddd'}}},plugins:{legend:{labels:{color:'#ddd'}}}}};
+    const graficoStock=new Chart(ctxStock,configStock);
+
+    function agregarAlStock(){
+      const tipo=document.getElementById('tipoMadera').value.trim();
+      const cantidad=parseInt(document.getElementById('cantidad').value);
+      if(!tipo||isNaN(cantidad)||cantidad<=0){alert("Ingresá tipo de madera válido y cantidad positiva");return;}
+      const indiceExistente=stockMaderas.findIndex(m=>m.tipo.toLowerCase()===tipo.toLowerCase());
+      if(indiceExistente!==-1){stockMaderas[indiceExistente].cantidad+=cantidad;}
+      else{stockMaderas.push({tipo:tipo,cantidad:cantidad,color:'#'+Math.floor(Math.random()*16777215).toString(16)});}
+      actualizarGraficoStock();
+      document.getElementById('tipoMadera').value='';
+      document.getElementById('medidas').value='';
+      document.getElementById('cantidad').value='';
+      document.getElementById('precio').value='';
+    }
+
+    function actualizarGraficoStock(){
+      datosStock.labels=stockMaderas.map(m=>m.tipo);
+      datosStock.datasets[0].data=stockMaderas.map(m=>m.cantidad);
+      datosStock.datasets[0].backgroundColor=stockMaderas.map(m=>m.color);
+      graficoStock.update();
+    }
