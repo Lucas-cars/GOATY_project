@@ -83,7 +83,7 @@ crearENDPOINT('movimiento_stock' ['id_movimiento', 'fecha', 'tipo', 'cantidad', 
 crearENDPOINT('producto', ['id_producto', 'nombre', 'codigo', 'categoria', 'stock_act', 'stock_min', 'precio', 'descripcion'], 'id_producto')
 crearENDPOINT('usuario', ['id_usuario', 'nombre_usuario', 'rol', 'contraseña'], 'id_usuario')
 
-app.listen(3000);
+app.listen(3000, () => console.log("API escuchando en http://localhost:3000"));
 
 
 
