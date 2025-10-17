@@ -144,6 +144,18 @@ select:disabled {
   color: #fff;
 }
 
+.btn-volver {
+  color: #ccc;
+  text-decoration: none;
+  font-size: 1.5rem;
+  margin-right: 10px;
+  transition: color 0.3s ease;
+}
+
+.btn-volver:hover {
+  color: #fff;
+}
+
 /* Secciones */
 .seccion {
   display: none;
