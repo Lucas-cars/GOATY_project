@@ -19,12 +19,32 @@ class API {
         static idUser(){
             
         }
-        static User() {
-            return {
+        static async agregarUser(dni, cargo, nombre) {
+            let mail = 'usuario@example.com';
+            let telefono = '132321321';
+            try {
+                const response = await fetch('http://localhost:3000/api/usuario', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json' 
+                    },
+                    
+                    body: JSON.stringify({ dni, mail, telefono, cargo, nombre })
+                });
                 
-            };
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+                
+                const resultado = await response.json();
+                return resultado;
+            } catch (error) {
+                console.error('Error al agregar usuario:', error);
+                throw error;
+            }
         }
 }
+
 
 
 // ASISTECIA    
