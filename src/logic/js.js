@@ -79,7 +79,7 @@ function crearENDPOINT(tabla, columnas, primaryKey = 'id') {
 
 crearENDPOINT('asistencia', ['id_asistencia', 'fecha', 'hr_en', 'hr_sl', 'dni'], 'id_asistencia')
 crearENDPOINT('empleado', ['dni', 'mail', 'telefono', 'cargo', 'nombre'], 'dni')
-crearENDPOINT('movimiento_stock' ['id_movimiento', 'fecha', 'tipo', 'cantidad', 'id_producto', 'id_usuario'], 'id_movimiento')
+crearENDPOINT('movimiento_stock', ['id_movimiento', 'fecha', 'tipo', 'cantidad', 'id_producto', 'id_usuario'], 'id_movimiento')
 crearENDPOINT('producto', ['id_producto', 'nombre', 'codigo', 'categoria', 'stock_act', 'stock_min', 'precio', 'descripcion'], 'id_producto')
 crearENDPOINT('usuario', ['id_usuario', 'nombre_usuario', 'rol', 'contraseña'], 'id_usuario')
 

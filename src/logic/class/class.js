@@ -1,21 +1,21 @@
 // USUARIO
-class user {
-    #usuario = ''
-    #contraseña = '';
-
-    constructor(usuario, contraseña) {
-        this.#usuario = usuario;
-        this.#contraseña = contraseña;
+class API {
+    constructor() {
     }
-    static modDatos(type,dato) {
+    static async modDatos(type,dato) {
         }
 
-        static verDatos() {
-            return {
-
-            };
+        static async verTodosDatos(tabla) {
+            try {
+            const response = await fetch(`http://localhost:3000/api/${tabla}`);
+            const datos = await response.json();
+            return datos;
+        } catch (error) {
+            console.error('Error al obtener los datos:', error);
+            throw error;
         }
-        
+    }
+
         static idUser(){
             
         }
@@ -26,11 +26,6 @@ class user {
         }
 }
 
-class admin extends user {
-    asignarCargo(userSeleccionado, cargo) {
-
-    }
-}
 
 // ASISTECIA    
 class asistencia {
