@@ -19,11 +19,9 @@ class API {
         static idUser(){
             
         }
-        static async agregarUser(dni, cargo, nombre) {
-            let mail = 'usuario@example.com';
-            let telefono = '132321321';
+        static async agregarUser(dni, mail, telefono, cargo, nombre) {
             try {
-                const response = await fetch('http://localhost:3000/api/usuario', {
+                const response = await fetch('http://localhost:3000/api/empleado', {
                     method: 'POST',
                     headers: { 
                         'Content-Type': 'application/json' 
@@ -132,4 +130,13 @@ class Stock {
 }
 
 // EXPORTO LAS CLASES PARA PODER USARLAS EN OTRO LADO
-module.exports = { user, admin, asistencia, Stock };
+
+
+if (typeof window !== 'undefined') {
+    window.API = API;
+    window.Asistencia = asistencia;
+    window.Stock = Stock;
+}
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { API, asistencia, Stock };
+}
