@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Editar Empleado</title>
+  <link rel="stylesheet" href="../src/sistema.css" />
+  <script src="../src/logic/class/class.js"></script>
+  <script src="../src/editar_empleado.js" defer></script>
+</head>
+<body>
+  <main class="main-content">
+    <h1>Editar / Eliminar empleado</h1>
+    <div class="form-group">
+      <label>Nombre</label>
+      <input id="editNombre" />
+    </div>
+    <div class="form-group">
+      <label>DNI (no editable)</label>
+      <input id="editDNI" disabled />
+    </div>
+    <div class="form-group">
+      <label>Cargo</label>
+      <input id="editCargo" />
+    </div>
+    <div class="form-group">
+      <label>Telefono</label>
+      <input id="editTelefono" />
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input id="editEmail" />
+    </div>
+    <div class="form-group">
+      <label>Fecha de ingreso</label>
+      <input id="editFecha" type="date" />
+    </div>
+
+    <button class="btn" id="btnSave">Guardar cambios</button>
+    <button class="btn" id="btnDelete" style="background:#a33;margin-left:8px">Eliminar</button>
+    <button class="btn" id="btnBack" style="background:#444;margin-left:8px">Volver</button>
+  </main>
+</body>
+</html>

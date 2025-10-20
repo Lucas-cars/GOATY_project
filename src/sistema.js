@@ -31,7 +31,44 @@
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('fecha').value = today;
     document.getElementById('empleadoFechaIngreso').value = today;
+     
+
+      // cargar empleados desde la API al iniciar
+    if (typeof API !== 'undefined' && API.verTodosDatos) {
+      loadEmpleados().catch(err => console.error('Error cargando empleados:', err));
+    }
       });
+
+    // recargar cuando se vuelva a la página desde otra (evita problemas con back cache)
+    window.addEventListener('pageshow', () => {
+      if (typeof API !== 'undefined' && API.verTodosDatos) {
+        loadEmpleados().catch(err => console.error('Error cargando empleados (pageshow):', err));
+      }
+    });
+
+    async function loadEmpleados() {
+      try {
+        const rows = await API.verTodosDatos('empleado');
+        // mapear campos que trae la API (en la DB la columna se llama 'mail')
+        empleados = (rows || []).map(r => ({
+          nombre: r.nombre || '',
+          dni: r.dni || r.id_usuario || '',
+          cargo: r.cargo || '',
+          telefono: r.telefono || '',
+          email: r.mail || r.email || '',
+          fechaIngreso: r.fechaIngreso || r.fecha || ''
+        }));
+        actualizarTablaEmpleados();
+        actualizarSelectorEmpleados();
+      } catch (err) {
+        console.error('loadEmpleados error:', err);
+        // no romper la UI si falla
+        empleados = [];
+        actualizarTablaEmpleados();
+        actualizarSelectorEmpleados();
+      }
+    }
+    
 
     /* ------------------ GENERAL ------------------ */
     function mostrarSeccion(seccionId) {
@@ -60,7 +97,7 @@
     /* ------------------ EMPLEADOS ------------------ */
     let empleados = [];
 
-    function agregarEmpleado() {
+    async function agregarEmpleado() {
       const nombre = document.getElementById('empleadoNombre').value.trim();
       const dni = document.getElementById('empleadoDNI').value.trim();
       const cargo = document.getElementById('empleadoCargo').value.trim();
@@ -68,43 +105,57 @@
       const email = document.getElementById('empleadoEmail').value.trim();
       const fechaIngreso = document.getElementById('empleadoFechaIngreso').value;
 
-      API.agregarUser(dni, email, telefono, cargo, nombre)
-        .then(resultado => {
-            console.log('Usuario agregado exitosamente:', resultado);
-        })
-        .catch(error => {
-            console.error('Error al agregar usuario:', error);
-      });
+      try {
+        const resultado = await API.agregarUser(dni, email, telefono, cargo, nombre, fechaIngreso);
+        // mapear respuesta del servidor (mail → email)
+        const nuevo = {
+          nombre: resultado.nombre || nombre,
+          dni: resultado.dni || dni,
+          cargo: resultado.cargo || cargo,
+          telefono: resultado.telefono || telefono,
+          email: resultado.mail || resultado.email || email,
+          fechaIngreso: resultado.fechaIngreso || fechaIngreso
+        };
+        empleados.push(nuevo);
+        actualizarTablaEmpleados();
+        actualizarSelectorEmpleados();
 
-      //const horaIngreso = document.getElementById('empleadoHoraIngreso').value;
-      //const horaSalida = document.getElementById('empleadoHoraSalida').value;
-      //const asistencia = document.getElementById('empleadoAsistencia').value;
-
-      /*if(asistencia==='Presente' && (!nombre||!dni||!cargo||!fechaRegistro||!horaIngreso||!horaSalida)){
-        alert('Por favor, completá todos los campos para empleados presentes.');
-        return;
-      } */
-
-    
-
-      empleados.push({nombre,dni,cargo, telefono, email, fechaIngreso});
-      actualizarTablaEmpleados();
-      document.getElementById('empleadoNombre').value='';
-      document.getElementById('empleadoDNI').value='';
-      document.getElementById('empleadoCargo').value='';
-      document.getElementById('empleadoTelefono').value='';
-      document.getElementById('empleadoEmail').value='';
-      document.getElementById('empleadoFechaIngreso').value='';
-      //activarHorarios();
-      actualizarSelectorEmpleados();
+        // limpiar formulario sólo si todo OK
+        document.getElementById('empleadoNombre').value='';
+        document.getElementById('empleadoDNI').value='';
+        document.getElementById('empleadoCargo').value='';
+        document.getElementById('empleadoTelefono').value='';
+        document.getElementById('empleadoEmail').value='';
+        document.getElementById('empleadoFechaIngreso').value='';
+      } catch (error) {
+        console.error('Error al agregar usuario:', error);
+        alert('No se pudo agregar el empleado en el servidor');
+      }
     }
-
     function actualizarTablaEmpleados() {
-      const tbody = document.querySelector('#tablaEmpleados tbody');
+      const table = document.getElementById('tablaEmpleados');
+      if (!table) return;
+      let tbody = table.querySelector('tbody');
+      if (!tbody) {
+        tbody = document.createElement('tbody');
+        table.appendChild(tbody);
+      }
       tbody.innerHTML='';
       empleados.forEach(emp=>{
         const tr=document.createElement('tr');
-        tr.innerHTML=`<td>${emp.nombre}</td><td>${emp.dni}</td><td>${emp.cargo}</td><td>${emp.fechaIngreso}</td>`;
+        tr.innerHTML = `
+          <td>${emp.nombre}</td>
+          <td>${emp.dni}</td>
+          <td>${emp.cargo}</td>
+          <td>${emp.telefono}</td>
+          <td>${emp.email}</td>
+          <td>${emp.fechaIngreso}</td>
+        `;
+        tr.style.cursor = 'pointer';
+        tr.addEventListener('click', () => {
+          localStorage.setItem('editarEmpleado', JSON.stringify(emp));
+          window.location.href = 'editar_Empleado.html';
+        });
         tbody.appendChild(tr);
       });
     }
