@@ -7,6 +7,7 @@ const cors = require('cors');
 app.use(cors());
 
 
+
 const connection = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -76,10 +77,46 @@ function crearENDPOINT(tabla, columnas, primaryKey = 'id') {
   });
 }
 
+const util = require('util');
+const db = { query: util.promisify(connection.query).bind(connection) };
+
+app.get('/api/tablero', async (req, res) => {
+  try {
+    const maderas = await db.query(`
+      SELECT IFNULL(SUM(ms.cantidad),0) AS total_madera
+      FROM movimiento_stock ms
+      JOIN producto p ON ms.id_producto = p.id_producto
+      WHERE p.categoria = 'Maderas' AND ms.tipo = 'entrada'
+    `);
+
+    const pallets = await db.query(`
+      SELECT IFNULL(SUM(ms.cantidad),0) AS total_pallets
+      FROM movimiento_stock ms
+      JOIN producto p ON ms.id_producto = p.id_producto
+      WHERE p.categoria = 'Pallets terminados' AND ms.tipo = 'entrada'
+    `);
+
+    const valor = await db.query(`
+      SELECT IFNULL(SUM(p.precio * ms.cantidad),0) AS valor_total
+      FROM movimiento_stock ms
+      JOIN producto p ON ms.id_producto = p.id_producto
+      WHERE ms.tipo = 'entrada'
+    `);
+
+    res.json({
+      madera_disponible: (maderas[0] && maderas[0].total_madera) || 0,
+      pallets_terminados: (pallets[0] && pallets[0].total_pallets) || 0,
+      valor_stock: (valor[0] && valor[0].valor_total) || 0
+    });
+  } catch (error) {
+    console.error('Error /api/tablero:', error);
+    res.status(500).json({ error: 'Error al obtener datos del tablero' });
+  }
+});
 
 crearENDPOINT('asistencia', ['id_asistencia', 'fecha', 'hr_en', 'hr_sl', 'dni'], 'id_asistencia')
 crearENDPOINT('empleado', ['dni', 'mail', 'telefono', 'cargo', 'nombre', 'fechaIngreso'], 'dni')
-crearENDPOINT('movimiento_stock', ['id_movimiento', 'fecha', 'tipo', 'cantidad', 'id_producto', 'id_usuario'], 'id_movimiento')
+crearENDPOINT('movimiento_stock', ['fecha', 'tipo', 'cantidad', 'id_producto', 'id_usuario'], 'id_movimiento')
 crearENDPOINT('producto', ['id_producto', 'nombre', 'codigo', 'categoria', 'stock_act', 'stock_min', 'precio', 'descripcion'], 'id_producto')
 crearENDPOINT('usuario', ['id_usuario', 'nombre_usuario', 'rol', 'contraseña'], 'id_usuario')
 
