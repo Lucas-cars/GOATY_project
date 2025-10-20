@@ -26,7 +26,7 @@
           <li onclick="mostrarSeccion('inicio')">Inicio</li>
           <li onclick="mostrarSeccion('empleados')">Registro de empleado</li>
           <li onclick="mostrarSeccion('informes')">Informes</li>
-          <li onclick="mostrarSeccion('stock')">Stock</li>
+          <li onclick="mostrarSeccion('stock')">Producto</li>
           <li onclick="mostrarSeccion('asistencia')">Asistencia</li>
         </ul>
       </nav>
@@ -35,7 +35,7 @@
     <!-- Contenido principal -->
     <main class="main-content">
         <!-- TOPBAR + METRICS (nuevo) -->
-<section id="inicio" class="seccion">
+<section id="inicio" class="seccion  activa">
   <div class="topbar">
     <div class="topbar-left">
       <h2 class="page-title">Tablero</h2>
@@ -44,7 +44,7 @@
       <div class="user">
         <div class="avatar"></div>
         <div class="user-info">
-          <div class="user-name">Usuario</div>
+          <div class="user-name" id="usuarioUsado"></div>
         </div>
       </div>
     </div>
@@ -52,15 +52,15 @@
 
   <section class="stats-row" aria-label="Resumen">
     <div class="stat-card" style="--c:#4aa3ff">
-      <div class="stat-value">51</div>
+      <div class="stat-value" id="maderaDisponible">0</div>
       <div class="stat-label">Cantidad total de madera disponible</div>
     </div>
     <div class="stat-card" style="--c:#ff6b6b">
-      <div class="stat-value">40</div>
+      <div class="stat-value" id="valorStock">0</div>
       <div class="stat-label">Valor total del stock</div>
     </div>
     <div class="stat-card" style="--c:#5fd28f">
-      <div class="stat-value">52</div>
+      <div class="stat-value" id="palletsTerminados">0</div>
       <div class="stat-label">Cantidad de pallets terminados</div>
     </div>
   </section>
@@ -68,7 +68,7 @@
       
       <!-- Sección Empleados -->
       <!-- Sección Empleados -->
-<section id="empleados" class="seccion activa">
+<section id="empleados" class="seccion">
   <h1>Registro del empleado</h1>
 
   <!-- Campos básicos -->
@@ -135,11 +135,10 @@
 
 </section>
 
-      <!-- Sección Informes -->
+
       <section id="informes" class="seccion">
         <h1>Generar Informe</h1>
 
-        <!-- Selector de empleado con buscador -->
         <div class="form-group informe-empleado-container">
           <label for="selectorEmpleado">Seleccionar Empleado</label>
           <div class="selector-buscador">
@@ -161,10 +160,6 @@
             <option value="ultAnio">Ultimo año</option>
           </select>
         </div>
-        <!-- <div class="form-group">
-          <label for="hasta">Hasta</label>
-          <input type="date" id="hasta" />
-        </div> -->
 
         <div class="form-group">
           <label for="observaciones">Observaciones </label>
@@ -190,20 +185,11 @@
 
       <!-- Sección Stock -->
       <section id="stock" class="seccion">
-        <h1>Administracion de stock</h1>
+        <h1>Administracion de productos</h1>
         <div class="form-group">
-          <label>Categoria de stock</label>
-          <select id="categoria" onchange="actualizarTipos()">
-            <option value=""  disabled selected hidden>Por favor, seleccione</option>
-            <option value="maderas">Maderas</option>
-            <option value="pallets">Pallets terminados</option>
-            <option value="herramientas">Herramientas</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Tipo o nombre</label>
-          <select id="tipo" onchange="">
-            <option value=""  disabled selected hidden>Por favor, seleccione</option>
+          <label>Nombre del producto</label>
+          <select id="productoSelect">
+            <option value="" disabled selected hidden>Seleccione producto</option>
           </select>
         </div>
         <div class="form-group">
@@ -215,24 +201,17 @@
           <label>Cantidad</label>
           <input type="number" placeholder="Ej: 50" id="cantidad" />
         </div>
-        <div class="form-group">
-          <label>Unidad</label>
-          <input type="" placeholder="Ej: piezas, litros" id="" />
-        </div>
 
-        <div class="form-group">
-          <label>Precio unitario</label>
-          <input type="number" placeholder="Ej: 1500.00" id="precio" />
-        </div>
+   
         
 
-        <button class="btn" onclick="agregarAlStock()">Guardar</button>
+        <button class="btn" onclick="agregarAlStock()">Agregar al stock</button>
 
-        <h2>Gráfico de stock actual</h2>
+       <!--  <h2>Gráfico de stock actual</h2>
         <div class="resizable-container">
           <canvas id="graficoStock"></canvas>
         </div>
-      </section>
+      </section> -->
     
 
     </section>
@@ -248,7 +227,7 @@
         </div>
         <div class="form-group">
           <label>Fecha</label>
-          <input type="date"  id="fecha" />
+          <input type="date"  id="asistenciaFecha" />
         </div>
         <div class="form-group">
           <label>Asistencia</label>
@@ -267,7 +246,7 @@
           <input type="time" id="empleadoHoraSalida" disabled />
         </div>
 
-        <button class="btn" onclick="">Guardar</button>
+        <button class="btn" onclick="guardarAsistencia()">Guardar</button>
 
         <h2>Asistencia</h2>
         <table id="tablaAsistencia">

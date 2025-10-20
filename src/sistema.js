@@ -230,19 +230,7 @@
     const configStock={type:'bar',data:datosStock,options:{responsive:true,scales:{y:{beginAtZero:true,ticks:{color:'#ddd'}},x:{ticks:{color:'#ddd'}}},plugins:{legend:{labels:{color:'#ddd'}}}}};
     const graficoStock=new Chart(ctxStock,configStock);
 
-    function agregarAlStock(){
-      const tipo=document.getElementById('tipoMadera').value.trim();
-      const cantidad=parseInt(document.getElementById('cantidad').value);
-      if(!tipo||isNaN(cantidad)||cantidad<=0){alert("Ingresá tipo de madera válido y cantidad positiva");return;}
-      const indiceExistente=stockMaderas.findIndex(m=>m.tipo.toLowerCase()===tipo.toLowerCase());
-      if(indiceExistente!==-1){stockMaderas[indiceExistente].cantidad+=cantidad;}
-      else{stockMaderas.push({tipo:tipo,cantidad:cantidad,color:'#'+Math.floor(Math.random()*16777215).toString(16)});}
-      actualizarGraficoStock();
-      document.getElementById('tipoMadera').value='';
-      document.getElementById('medidas').value='';
-      document.getElementById('cantidad').value='';
-      document.getElementById('precio').value='';
-    }
+  
 
     function actualizarGraficoStock(){
       datosStock.labels=stockMaderas.map(m=>m.tipo);
@@ -251,4 +239,57 @@
       graficoStock.update();
     }
 
-    
+    async function loadAsistencias() {
+      try {
+        const rows = await API.verAsistencias();
+        const tbody = document.querySelector('#tablaAsistencia tbody') || (() => {
+          const t = document.querySelector('#tablaAsistencia');
+          const tb = document.createElement('tbody');
+          t.appendChild(tb);
+          return tb;
+        })();
+
+        tbody.innerHTML = '';
+        (rows || []).forEach(r => {
+          // r: { id_asistencia, fecha, hr_en, hr_sl, dni }
+          const nombre = (empleados.find(e => e.dni == r.dni) || {}).nombre || '';
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${r.fecha || ''}</td>
+            <td>${r.dni || ''}</td>
+            <td>${nombre}</td>
+            <td>${r.hr_en || ''}</td>
+            <td>${r.hr_sl || ''}</td>
+            <td>${(r.hr_en || r.hr_sl) ? 'Presente' : 'Ausente'}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error('Error cargando asistencias:', err);
+      }
+    }
+
+// guardar asistencia (botón)
+  async function guardarAsistencia() {
+    const dni = document.getElementById('selectorAsistencia')?.value;
+    const fecha = document.getElementById('asistenciaFecha')?.value;
+    const estado = document.getElementById('empleadoAsistencia')?.value;
+    let hr_en = document.getElementById('empleadoHoraIngreso')?.value || null;
+    let hr_sl = document.getElementById('empleadoHoraSalida')?.value || null;
+
+    if (!dni) { alert('Seleccioná un empleado'); return; }
+    if (!fecha) { alert('Seleccioná una fecha'); return; }
+    if (estado !== 'Presente') { hr_en = null; hr_sl = null; }
+
+    try {
+      await API.agregarAsistencia({ dni, fecha, hr_en, hr_sl });
+      // recargar lista de asistencias
+      await loadAsistencias();
+      alert('Asistencia guardada');
+    } catch (err) {
+      console.error('Error al guardar asistencia:', err);
+      alert('Error al guardar asistencia. Mirá consola / network para más detalles.');
+    }
+  }
+  
+  

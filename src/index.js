@@ -1,4 +1,4 @@
-function showLoadingBar() {
+/* function showLoadingBar() {
   const loadingBar = document.getElementById('loading-bar');
   const loadingProgress = document.getElementById('loading-progress');
 
@@ -7,6 +7,14 @@ function showLoadingBar() {
 
   // Redirigir a sistema.html después de 2 segundos (duración de la animación)
   setTimeout(() => {
-    window.location.href = 'sistema.html';
+    window.location.href = 'inicio.html';
   }, 2000);
-}
+} */
+
+
+document.querySelector('.login-box form').addEventListener('submit', function(e) {
+  e.preventDefault(); 
+  window.location.href = 'inicio.html'; 
+});
+
+
