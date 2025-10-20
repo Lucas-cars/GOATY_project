@@ -1,3 +1,38 @@
+    const opciones = {
+      maderas: ["Pino", "Roble", "Eucalipto", "Cedro"],
+      herramientas: ["Martillo", "Clavadora neumática", "Sierra circular", "Taladro"],
+      pallets: ["EUR", "Exportación", "Reciclado", "A medida"]
+
+    };
+    function actualizarTipos() {
+      const categoriaSelect = document.getElementById("categoria");
+      const tipoSelect = document.getElementById("tipo");
+
+ 
+      tipoSelect.innerHTML = '<option value="" disabled selected hidden>Por favor, seleccione</option>';
+
+ 
+      const categoriaSeleccionada = categoriaSelect.value;
+
+ 
+      if (opciones[categoriaSeleccionada]) {
+        opciones[categoriaSeleccionada].forEach(tipo => {
+          const option = document.createElement("option");
+          option.value = tipo;
+          option.textContent = tipo;
+          tipoSelect.appendChild(option);
+        });
+      }
+    }
+    
+    
+    document.addEventListener('DOMContentLoaded', function() {
+    
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('fecha').value = today;
+    document.getElementById('empleadoFechaIngreso').value = today;
+      });
+
     /* ------------------ GENERAL ------------------ */
     function mostrarSeccion(seccionId) {
   // Ocultar todas las secciones
@@ -13,7 +48,7 @@
   }
 }
 
-    function toggleCamposEmpleado() {
+    function activarHorarios() {
       const asistencia = document.getElementById('empleadoAsistencia').value;
       ['empleadoHoraIngreso','empleadoHoraSalida'].forEach(id => {
         const campo = document.getElementById(id);
@@ -29,24 +64,38 @@
       const nombre = document.getElementById('empleadoNombre').value.trim();
       const dni = document.getElementById('empleadoDNI').value.trim();
       const cargo = document.getElementById('empleadoCargo').value.trim();
-      const fechaRegistro = document.getElementById('empleadoFechaRegistro').value;
-      const horaIngreso = document.getElementById('empleadoHoraIngreso').value;
-      const horaSalida = document.getElementById('empleadoHoraSalida').value;
-      const asistencia = document.getElementById('empleadoAsistencia').value;
+      const telefono = document.getElementById('empleadoTelefono').value.trim();
+      const email = document.getElementById('empleadoEmail').value.trim();
+      const fechaIngreso = document.getElementById('empleadoFechaIngreso').value;
 
-      if(asistencia==='Presente' && (!nombre||!dni||!cargo||!fechaRegistro||!horaIngreso||!horaSalida)){
+      API.agregarUser(dni, email, telefono, cargo, nombre)
+        .then(resultado => {
+            console.log('Usuario agregado exitosamente:', resultado);
+        })
+        .catch(error => {
+            console.error('Error al agregar usuario:', error);
+      });
+
+      //const horaIngreso = document.getElementById('empleadoHoraIngreso').value;
+      //const horaSalida = document.getElementById('empleadoHoraSalida').value;
+      //const asistencia = document.getElementById('empleadoAsistencia').value;
+
+      /*if(asistencia==='Presente' && (!nombre||!dni||!cargo||!fechaRegistro||!horaIngreso||!horaSalida)){
         alert('Por favor, completá todos los campos para empleados presentes.');
         return;
-      }
+      } */
 
-      empleados.push({nombre,dni,cargo,fechaRegistro,horaIngreso,horaSalida,asistencia});
+    
+
+      empleados.push({nombre,dni,cargo, telefono, email, fechaIngreso});
       actualizarTablaEmpleados();
       document.getElementById('empleadoNombre').value='';
       document.getElementById('empleadoDNI').value='';
       document.getElementById('empleadoCargo').value='';
-      document.getElementById('empleadoFechaRegistro').value='';
-      document.getElementById('empleadoAsistencia').value='Presente';
-      toggleCamposEmpleado();
+      document.getElementById('empleadoTelefono').value='';
+      document.getElementById('empleadoEmail').value='';
+      document.getElementById('empleadoFechaIngreso').value='';
+      //activarHorarios();
       actualizarSelectorEmpleados();
     }
 
@@ -55,7 +104,7 @@
       tbody.innerHTML='';
       empleados.forEach(emp=>{
         const tr=document.createElement('tr');
-        tr.innerHTML=`<td>${emp.nombre}</td><td>${emp.dni}</td><td>${emp.cargo}</td><td>${emp.fechaRegistro}</td><td>${emp.horaIngreso}</td><td>${emp.horaSalida}</td><td>${emp.asistencia}</td>`;
+        tr.innerHTML=`<td>${emp.nombre}</td><td>${emp.dni}</td><td>${emp.cargo}</td><td>${emp.fechaIngreso}</td>`;
         tbody.appendChild(tr);
       });
     }
@@ -88,12 +137,12 @@
     }
 
     function generarInforme(){
-      const desde=document.getElementById('desde').value;
+      const evaluacion=document.getElementById('evaluacion').value;
       const hasta=document.getElementById('hasta').value;
       const selectorEmpleado=document.getElementById('selectorEmpleado').value;
 
-      if(!desde||!hasta){alert('Seleccioná fecha desde y hasta.'); return;}
-      if(new Date(desde)>new Date(hasta)){alert('Fecha "Desde" mayor que "Hasta".'); return;}
+      if(!evaluacion||!hasta){alert('Seleccione fecha de evaluacion del empleado.'); return;}
+      //if(new Date(desde)>new Date(hasta)){alert('Fecha "Desde" mayor que "Hasta".'); return;}
 
       let empleadosFiltrados=empleados.filter(emp=>emp.fechaRegistro>=desde && emp.fechaRegistro<=hasta);
       if(selectorEmpleado!==''){empleadosFiltrados=[empleados[parseInt(selectorEmpleado)]];}
@@ -135,3 +184,5 @@
       datosStock.datasets[0].backgroundColor=stockMaderas.map(m=>m.color);
       graficoStock.update();
     }
+
+    

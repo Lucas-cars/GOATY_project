@@ -6,7 +6,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="../src/sistema.css">
+  <script src="../src/logic/class/class.js"></script>
   <script src="../src/sistema.js" defer></script>
+
 </head>
 <body>
   <div class="dashboard-container">
@@ -21,24 +23,57 @@
 </h2>
       <nav>
         <ul>
-          <li onclick="mostrarSeccion('empleados')">Empleados</li>
+          <li onclick="mostrarSeccion('inicio')">Inicio</li>
+          <li onclick="mostrarSeccion('empleados')">Registro de empleado</li>
           <li onclick="mostrarSeccion('informes')">Informes</li>
           <li onclick="mostrarSeccion('stock')">Stock</li>
+          <li onclick="mostrarSeccion('asistencia')">Asistencia</li>
         </ul>
       </nav>
     </aside>
 
     <!-- Contenido principal -->
     <main class="main-content">
+        <!-- TOPBAR + METRICS (nuevo) -->
+<section id="inicio" class="seccion">
+  <div class="topbar">
+    <div class="topbar-left">
+      <h2 class="page-title">Tablero</h2>
+    </div>
+    <div class="topbar-right">
+      <div class="user">
+        <div class="avatar"></div>
+        <div class="user-info">
+          <div class="user-name">Usuario</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="stats-row" aria-label="Resumen">
+    <div class="stat-card" style="--c:#4aa3ff">
+      <div class="stat-value">51</div>
+      <div class="stat-label">Cantidad total de madera disponible</div>
+    </div>
+    <div class="stat-card" style="--c:#ff6b6b">
+      <div class="stat-value">40</div>
+      <div class="stat-label">Valor total del stock</div>
+    </div>
+    <div class="stat-card" style="--c:#5fd28f">
+      <div class="stat-value">52</div>
+      <div class="stat-label">Cantidad de pallets terminados</div>
+    </div>
+  </section>
+</section>
       
       <!-- Sección Empleados -->
       <!-- Sección Empleados -->
 <section id="empleados" class="seccion activa">
-  <h1>Registrar Empleados</h1>
+  <h1>Registro del empleado</h1>
 
   <!-- Campos básicos -->
   <div class="form-group">
-    <label>Nombre Completo</label>
+    <label>Nombre completo</label>
     <input type="text" id="empleadoNombre" placeholder="Ej: Juan Pérez" />
   </div>
   <div class="form-group">
@@ -49,38 +84,60 @@
     <label>Cargo</label>
     <input type="text" id="empleadoCargo" placeholder="Ej: Encargado, Vendedor..." />
   </div>
+  <div class="form-group">
+    <label>Telefono</label>
+    <input type="text" id="empleadoTelefono" placeholder="Ej: 3412562010" />
+  </div>
+  <div class="form-group">
+    <label>Email</label>
+    <input type="text" id="empleadoEmail" placeholder="JuanPerez@gmail.com" />
+  </div>
 
   <!-- Fecha de registro -->
   <div class="form-group">
-    <label>Fecha de Registro</label>
-    <input type="date" id="empleadoFechaRegistro" />
+    <label>Fecha de ingreso</label>
+    <input type="date" id="empleadoFechaIngreso" id="fecha" />
   </div>
 
   <!-- Selector de Asistencia -->
-  <div class="form-group">
+<!--   <div class="form-group">
     <label>Asistencia</label>
     <select id="empleadoAsistencia" onchange="toggleCamposEmpleado()">
       <option value="Presente">Presente</option>
       <option value="Ausente">Ausente</option>
     </select>
-  </div>
+  </div> -->
 
   <!-- Horarios de ingreso y salida -->
-  <div class="form-group">
+<!--   <div class="form-group">
     <label>Hora de Ingreso</label>
     <input type="time" id="empleadoHoraIngreso" disabled />
   </div>
   <div class="form-group">
     <label>Hora de Salida</label>
     <input type="time" id="empleadoHoraSalida" disabled />
-  </div>
+  </div> -->
 
   <button class="btn" onclick="agregarEmpleado()">Guardar</button>
+
+  <h2>Empleados</h2>
+  <table id="tablaEmpleados">
+    <thead>
+      <tr>
+        <th>Nombre</th><th>DNI</th><th>Cargo</th><th>Telefono</th><th>Email</th><th>Fecha de ingreso</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+
+
+
 </section>
 
       <!-- Sección Informes -->
       <section id="informes" class="seccion">
-        <h1>Generar Informes</h1>
+        <h1>Generar Informe</h1>
 
         <!-- Selector de empleado con buscador -->
         <div class="form-group informe-empleado-container">
@@ -92,16 +149,25 @@
         </div>
 
         <div class="form-group">
-          <label for="desde">Desde</label>
-          <input type="date" id="desde" />
+          <label for="evaluacion">Fecha de evaluacion</label>
+          <input type="date" id="evaluacion" />
         </div>
         <div class="form-group">
+          <label>Periodo evaluado</label>
+          <select id="periodo" onchange="">
+            <option value=""  disabled selected hidden>Por favor, seleccione</option>
+            <option value="ultMes">Ultimo mes</option>
+            <option value="ultTri">Ultimo trimestre</option>
+            <option value="ultAnio">Ultimo año</option>
+          </select>
+        </div>
+        <!-- <div class="form-group">
           <label for="hasta">Hasta</label>
           <input type="date" id="hasta" />
-        </div>
+        </div> -->
 
         <div class="form-group">
-          <label for="observaciones">Observaciones (opcional)</label>
+          <label for="observaciones">Observaciones </label>
           <input type="text" id="observaciones" placeholder="Notas adicionales..." />
         </div>
 
@@ -111,13 +177,10 @@
         <table id="tablaInforme">
           <thead>
             <tr>
-              <th>Nombre Completo</th>
+              <th>Nombre completo</th>
               <th>DNI</th>
               <th>Cargo</th>
-              <th>Fecha Registro</th>
-              <th>Hora Ingreso</th>
-              <th>Hora Salida</th>
-              <th>Asistencia</th>
+              <th>Fecha de emision</th>
             </tr>
           </thead>
           <tbody>
@@ -127,36 +190,87 @@
 
       <!-- Sección Stock -->
       <section id="stock" class="seccion">
-        <h1>Stock de Maderas</h1>
+        <h1>Administracion de stock</h1>
         <div class="form-group">
-          <label>Tipo de Madera</label>
-          <input type="text" placeholder="Ej: Pino, Roble..." id="tipoMadera" />
+          <label>Categoria de stock</label>
+          <select id="categoria" onchange="actualizarTipos()">
+            <option value=""  disabled selected hidden>Por favor, seleccione</option>
+            <option value="maderas">Maderas</option>
+            <option value="pallets">Pallets terminados</option>
+            <option value="herramientas">Herramientas</option>
+          </select>
         </div>
-
         <div class="form-group">
-          <label>Medidas</label>
-          <input type="text" placeholder="Ej: 2x4, 2m..." id="medidas" />
+          <label>Tipo o nombre</label>
+          <select id="tipo" onchange="">
+            <option value=""  disabled selected hidden>Por favor, seleccione</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Fecha de ingreso</label>
+          <input type="date" id="fecha">
         </div>
 
         <div class="form-group">
           <label>Cantidad</label>
           <input type="number" placeholder="Ej: 50" id="cantidad" />
         </div>
+        <div class="form-group">
+          <label>Unidad</label>
+          <input type="" placeholder="Ej: piezas, litros" id="" />
+        </div>
 
         <div class="form-group">
-          <label>Precio Unitario</label>
+          <label>Precio unitario</label>
           <input type="number" placeholder="Ej: 1500.00" id="precio" />
         </div>
+        
 
         <button class="btn" onclick="agregarAlStock()">Guardar</button>
 
-        <h2>Gráfico de Stock Actual</h2>
+        <h2>Gráfico de stock actual</h2>
         <div class="resizable-container">
           <canvas id="graficoStock"></canvas>
         </div>
       </section>
-    </main>
-  </div>
+    
+
+    </section>
+
+      <!-- Sección Asistencia -->
+      <section id="asistencia" class="seccion">
+        <h1>Asistencia</h1>
+        <div class="form-group">
+          <label>DNI</label>
+          <input type="text" id="empleadoDNI" placeholder="Ej: 30123456" />
+        </div>
+        <div class="form-group">
+          <label>Fecha</label>
+          <input type="date" id="fecha">
+        </div>
+        <div class="form-group">
+          <label>Asistencia</label>
+          <select id="empleadoAsistencia" onchange="activarHorarios()">
+            <option value=""  disabled selected hidden>Por favor, seleccione</option>
+            <option value="Presente">Presente</option>
+            <option value="Ausente">Ausente</option>
+          </select>
+        </div> 
+        <div class="form-group">
+          <label>Hora de Ingreso</label>
+          <input type="time" id="empleadoHoraIngreso" disabled />
+        </div>
+        <div class="form-group">
+          <label>Hora de Salida</label>
+          <input type="time" id="empleadoHoraSalida" disabled />
+        </div>
+        
+      </section>
+      </main>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
+
 </body>
 </html>
