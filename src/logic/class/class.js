@@ -19,7 +19,7 @@ class API {
         static idUser(){
             
         }
-        static async agregarUser(dni, mail, telefono, cargo, nombre) {
+        static async agregarUser(dni, mail, telefono, cargo, nombre, fechaIngreso) {
             try {
                 const response = await fetch('http://localhost:3000/api/empleado', {
                     method: 'POST',
@@ -27,7 +27,7 @@ class API {
                         'Content-Type': 'application/json' 
                     },
                     
-                    body: JSON.stringify({ dni, mail, telefono, cargo, nombre })
+                    body: JSON.stringify({ dni, mail, telefono, cargo, nombre, fechaIngreso })
                 });
                 
                 if (!response.ok) {
@@ -41,8 +41,39 @@ class API {
                 throw error;
             }
         }
-}
 
+        static async editarUser(dni, cambios) {
+            try {
+                const body = { dni, ...cambios };
+                const response = await fetch('http://localhost:3000/api/empleado', {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+                return await response.json();
+            } catch (error) {
+                console.error('Error al editar usuario:', error);
+                throw error;
+            }
+        }
+
+        // nuevo: borrar (DELETE)
+        static async borrarUser(dni) {
+            try {
+                const response = await fetch('http://localhost:3000/api/empleado', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ dni })
+                });
+                if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+                return await response.json();
+            } catch (error) {
+                console.error('Error al borrar usuario:', error);
+                throw error;
+        }
+    }
+}
 
 
 // ASISTECIA    
