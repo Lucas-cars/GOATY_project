@@ -60,14 +60,28 @@
         }));
         actualizarTablaEmpleados();
         actualizarSelectorEmpleados();
+        actualizarSelectAsistencia();
       } catch (err) {
         console.error('loadEmpleados error:', err);
         // no romper la UI si falla
         empleados = [];
         actualizarTablaEmpleados();
         actualizarSelectorEmpleados();
+        actualizarSelectAsistencia();
       }
     }
+
+    function actualizarSelectAsistencia() {
+      const sel = document.getElementById('selectorAsistencia');
+      if (!sel) return;
+      sel.innerHTML = '<option value="" disabled selected hidden>Seleccione empleado</option>';
+      empleados.forEach(emp => {
+        const opt = document.createElement('option');
+        opt.value = emp.dni;
+        opt.textContent = emp.nombre ? `${emp.nombre} — ${emp.dni}` : emp.dni;
+        sel.appendChild(opt);
+  });
+}
     
 
     /* ------------------ GENERAL ------------------ */
@@ -119,6 +133,7 @@
         empleados.push(nuevo);
         actualizarTablaEmpleados();
         actualizarSelectorEmpleados();
+        actualizarSelectAsistencia();
 
         // limpiar formulario sólo si todo OK
         document.getElementById('empleadoNombre').value='';
