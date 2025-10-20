@@ -33,13 +33,11 @@
     document.getElementById('empleadoFechaIngreso').value = today;
      
 
-      // cargar empleados desde la API al iniciar
     if (typeof API !== 'undefined' && API.verTodosDatos) {
       loadEmpleados().catch(err => console.error('Error cargando empleados:', err));
     }
       });
 
-    // recargar cuando se vuelva a la página desde otra (evita problemas con back cache)
     window.addEventListener('pageshow', () => {
       if (typeof API !== 'undefined' && API.verTodosDatos) {
         loadEmpleados().catch(err => console.error('Error cargando empleados (pageshow):', err));
@@ -49,7 +47,6 @@
     async function loadEmpleados() {
       try {
         const rows = await API.verTodosDatos('empleado');
-        // mapear campos que trae la API (en la DB la columna se llama 'mail')
         empleados = (rows || []).map(r => ({
           nombre: r.nombre || '',
           dni: r.dni || r.id_usuario || '',
@@ -63,7 +60,6 @@
         actualizarSelectAsistencia();
       } catch (err) {
         console.error('loadEmpleados error:', err);
-        // no romper la UI si falla
         empleados = [];
         actualizarTablaEmpleados();
         actualizarSelectorEmpleados();
@@ -84,15 +80,14 @@
 }
     
 
-    /* ------------------ GENERAL ------------------ */
+
     function mostrarSeccion(seccionId) {
-  // Ocultar todas las secciones
+
   const secciones = document.querySelectorAll('.seccion');
   secciones.forEach(seccion => {
     seccion.classList.remove('activa');
   });
 
-  // Mostrar la sección seleccionada
   const seccionActiva = document.getElementById(seccionId);
   if (seccionActiva) {
     seccionActiva.classList.add('activa');
@@ -108,7 +103,7 @@
       });
     }
 
-    /* ------------------ EMPLEADOS ------------------ */
+
     let empleados = [];
 
     async function agregarEmpleado() {
@@ -121,7 +116,6 @@
 
       try {
         const resultado = await API.agregarUser(dni, email, telefono, cargo, nombre, fechaIngreso);
-        // mapear respuesta del servidor (mail → email)
         const nuevo = {
           nombre: resultado.nombre || nombre,
           dni: resultado.dni || dni,
@@ -135,7 +129,7 @@
         actualizarSelectorEmpleados();
         actualizarSelectAsistencia();
 
-        // limpiar formulario sólo si todo OK
+
         document.getElementById('empleadoNombre').value='';
         document.getElementById('empleadoDNI').value='';
         document.getElementById('empleadoCargo').value='';
@@ -175,7 +169,7 @@
       });
     }
 
-    /* ------------------ INFORMES ------------------ */
+    
     function actualizarSelectorEmpleados() {
       const selector=document.getElementById('selectorEmpleado');
       selector.innerHTML='<option value="">Todos los empleados</option>';
@@ -208,7 +202,7 @@
       const selectorEmpleado=document.getElementById('selectorEmpleado').value;
 
       if(!evaluacion||!hasta){alert('Seleccione fecha de evaluacion del empleado.'); return;}
-      //if(new Date(desde)>new Date(hasta)){alert('Fecha "Desde" mayor que "Hasta".'); return;}
+   
 
       let empleadosFiltrados=empleados.filter(emp=>emp.fechaRegistro>=desde && emp.fechaRegistro<=hasta);
       if(selectorEmpleado!==''){empleadosFiltrados=[empleados[parseInt(selectorEmpleado)]];}
@@ -222,7 +216,7 @@
       });
     }
 
-    /* ------------------ STOCK ------------------ */
+
     const ctxStock=document.getElementById('graficoStock').getContext('2d');
     let stockMaderas=[];
 
@@ -251,7 +245,6 @@
 
         tbody.innerHTML = '';
         (rows || []).forEach(r => {
-          // r: { id_asistencia, fecha, hr_en, hr_sl, dni }
           const nombre = (empleados.find(e => e.dni == r.dni) || {}).nombre || '';
           const tr = document.createElement('tr');
           tr.innerHTML = `
@@ -269,7 +262,7 @@
       }
     }
 
-// guardar asistencia (botón)
+
   async function guardarAsistencia() {
     const dni = document.getElementById('selectorAsistencia')?.value;
     const fecha = document.getElementById('asistenciaFecha')?.value;
@@ -283,7 +276,6 @@
 
     try {
       await API.agregarAsistencia({ dni, fecha, hr_en, hr_sl });
-      // recargar lista de asistencias
       await loadAsistencias();
       alert('Asistencia guardada');
     } catch (err) {
