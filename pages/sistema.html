@@ -25,7 +25,6 @@
         <ul>
           <li onclick="mostrarSeccion('inicio')">Inicio</li>
           <li onclick="mostrarSeccion('empleados')">Registro de empleado</li>
-          <li onclick="mostrarSeccion('informes')">Informes</li>
           <li onclick="mostrarSeccion('stock')">Producto</li>
           <li onclick="mostrarSeccion('asistencia')">Asistencia</li>
         </ul>
@@ -136,52 +135,7 @@
 </section>
 
 
-      <section id="informes" class="seccion">
-        <h1>Generar Informe</h1>
-
-        <div class="form-group informe-empleado-container">
-          <label for="selectorEmpleado">Seleccionar Empleado</label>
-          <div class="selector-buscador">
-            <select id="selectorEmpleado"></select>
-            <input type="text" id="buscadorEmpleado" placeholder="Buscar..." oninput="filtrarEmpleados()"/>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="evaluacion">Fecha de evaluacion</label>
-          <input type="date" id="evaluacion" />
-        </div>
-        <div class="form-group">
-          <label>Periodo evaluado</label>
-          <select id="periodo" onchange="">
-            <option value=""  disabled selected hidden>Por favor, seleccione</option>
-            <option value="ultMes">Ultimo mes</option>
-            <option value="ultTri">Ultimo trimestre</option>
-            <option value="ultAnio">Ultimo año</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="observaciones">Observaciones </label>
-          <input type="text" id="observaciones" placeholder="Notas adicionales..." />
-        </div>
-
-        <button class="btn" onclick="generarInforme()">Generar Informe</button>
-
-        <h2>Resumen del Informe</h2>
-        <table id="tablaInforme">
-          <thead>
-            <tr>
-              <th>Nombre completo</th>
-              <th>DNI</th>
-              <th>Cargo</th>
-              <th>Fecha de emision</th>
-            </tr>
-          </thead>
-          <tbody>
-          </tbody>
-        </table>
-      </section>
+      
 
       <!-- Sección Stock -->
       <section id="stock" class="seccion">
