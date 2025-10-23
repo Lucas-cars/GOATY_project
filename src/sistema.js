@@ -82,15 +82,14 @@
 
 
     function mostrarSeccion(seccionId) {
-
-  const secciones = document.querySelectorAll('.seccion');
-  secciones.forEach(seccion => {
-    seccion.classList.remove('activa');
+      const secciones = document.querySelectorAll('.seccion');
+      secciones.forEach(seccion => {
+        seccion.classList.remove('activa');
   });
 
   const seccionActiva = document.getElementById(seccionId);
-  if (seccionActiva) {
-    seccionActiva.classList.add('activa');
+    if (seccionActiva) {
+      seccionActiva.classList.add('activa');
   }
 }
 
@@ -283,5 +282,4 @@
       alert('Error al guardar asistencia. Mirá consola / network para más detalles.');
     }
   }
-  
   

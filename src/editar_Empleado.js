@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   const raw = localStorage.getItem('editarEmpleado');
   if (!raw) {
-    // si no hay empleado, volver
     window.location.href = 'sistema.html';
     return;
   }
@@ -31,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     try {
       await API.editarUser(elDNI.value, cambios);
-      localStorage.removeItem('editarEmpleado');
+      localStorage.removeItem('editarEmpleado');  
       window.location.href = 'sistema.html';
     } catch (err) {
       alert('Error al actualizar el empleado');
@@ -43,7 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!confirm('Confirmar eliminación del empleado?')) return;
     try {
       await API.borrarUser(elDNI.value);
-      localStorage.removeItem('editarEmpleado');
       window.location.href = 'sistema.html';
     } catch (err) {
       alert('Error al eliminar el empleado');
@@ -56,3 +54,5 @@ document.addEventListener('DOMContentLoaded', () => {
     window.location.href = 'sistema.html';
   });
 });
+
+
